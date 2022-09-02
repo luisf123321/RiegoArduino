@@ -1,20 +1,3 @@
-/**
- * Copyright (C) 2012 James Coliz, Jr. <maniacbug@ymail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * version 2 as published by the Free Software Foundation.
- *
- * Update 2014 - TMRh20
- */
-
-/**
- * Simplest possible example of using RF24Network
- *
- * TRANSMITTER NODE
- * Every 2 seconds, send a payload to the receiver node.
- */
-
 #include <SPI.h>
 #include <RF24.h>
 #include <RF24Network.h>
@@ -35,6 +18,7 @@ const uint16_t other_node = 00;  // Address of the other node in Octal format
 const int ledPin = 8; // the pin that the LED is attached to
 int incomingByte;
 int contador = 0;
+
 void setup(void) {
   Serial.begin(115200);
   while (!Serial) {
@@ -49,7 +33,7 @@ void setup(void) {
     }
   }
   radio.setChannel(90);
-  network.begin(/*node address*/ this_node);
+  network.begin( this_node);
   pinMode(ledPin, OUTPUT);
 }
 
@@ -59,32 +43,48 @@ void loop() {
   while (network.available()) {  // Is there anything ready for us?
 
     RF24NetworkHeader header;  // If so, grab it and print it out
-    String data ="" ;
-    network.read(header, &data, sizeof(data));
-    Serial.print(F("data nodo00 = "));
-    Serial.print(data);
+    int command;
+    network.read(header, &command, sizeof(command));
+    Serial.print(F("command from nodo00 = "));
+    Serial.print(command);
     Serial.println("");
-    if (data == 1) {
-      digitalWrite(ledPin, HIGH);
-    }
-    // if it's an L (ASCII 76) turn off the LED:
-    if (data == 0) {
+
+    if (command == 0) {
       digitalWrite(ledPin, LOW);
     }
+    if (command == 1) {
+      digitalWrite(ledPin, HIGH);
+    }
+    if (command == 2) {
+      sendData();
+    }
+    
     
   }
 
-  unsigned long now = millis();
-
   // If it's time to send a message, send it!  
   delay(100);
-  while(contador == 50){
-    Serial.print(F("Sending... "));
-    String dataSend = "32.5";
-    RF24NetworkHeader header(other_node);
-    bool ok = network.write(header, &dataSend, sizeof(dataSend));
-    Serial.println(ok ? F("ok.") : F("failed."));
+  
+  while(contador == 100){
+    sendData();
     contador = 0;
   }
   contador = contador + 1;
+}
+
+void sendData(){
+  Serial.print(F("Sending... "));
+  double val;
+  val = analogRead(0); //connect sensor to Analog 0
+  double porcentaje;
+  double intervalo = 490 - 212;
+  porcentaje = ((490 - val)/intervalo)*100;
+  
+  Serial.println(val); //print the value to serial port
+  Serial.println("porcentaje:");
+  Serial.println(porcentaje);
+  float data = 32.5;
+  RF24NetworkHeader header(other_node);
+  bool ok = network.write(header, &porcentaje, sizeof(porcentaje));
+  Serial.println(ok ? F("ok.") : F("failed."));  
 }
