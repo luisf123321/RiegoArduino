@@ -14,6 +14,12 @@ RF24Network network(radio);  // Network uses that radio
 const uint16_t this_node = 00;   // Address of our node in Octal format
 const uint16_t node01 = 01;  // Address of the other node in Octal format
 const uint16_t node02 = 02;  // Address of the other node in Octal format
+const uint16_t node03 = 03;
+const uint16_t node04 = 04;
+const uint16_t node05 = 05;
+const uint16_t node06 = 06;
+const uint16_t node07 = 07;
+
 
 
 const int ledPin = 8; // the pin that the LED is attached to
@@ -44,7 +50,14 @@ void loop() {
   while (network.available()) {  // Is there anything ready for us?
 
     RF24NetworkHeader header;  // If so, grab it and print it out
-    float data;
+    //float data;
+    int len=0;
+    char gotmsg[]="";
+          
+    len = radio.getDynamicPayloadSize();
+    radio.read( &gotmsg, len );
+    len = radio.getDynamicPayloadSize();
+    Serial.println(gotmsg);
     network.read(header, &data, sizeof(data));
     Serial.print(F("data nodo = "));
     Serial.println(header.from_node);

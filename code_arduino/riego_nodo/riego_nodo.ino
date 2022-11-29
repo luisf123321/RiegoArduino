@@ -43,21 +43,15 @@ void loop() {
   while (network.available()) {  // Is there anything ready for us?
 
     RF24NetworkHeader header;  // If so, grab it and print it out
-    int command;
-    network.read(header, &command, sizeof(command));
+    //int command;
+    int len=0;
+    char gotmsg[]="";
+    len = radio.getDynamicPayloadSize();
+    network.read(header, &gotmsg, len);
     Serial.print(F("command from nodo00 = "));
-    Serial.print(command);
+    Serial.print(gotmsg);
     Serial.println("");
 
-    if (command == 0) {
-      digitalWrite(ledPin, LOW);
-    }
-    if (command == 1) {
-      digitalWrite(ledPin, HIGH);
-    }
-    if (command == 2) {
-      sendData();
-    }
     
     
   }
@@ -65,8 +59,9 @@ void loop() {
   // If it's time to send a message, send it!  
   delay(100);
   
-  while(contador == 100){
+  while(contador == 10){
     sendData();
+   
     contador = 0;
   }
   contador = contador + 1;
@@ -74,8 +69,21 @@ void loop() {
 
 void sendData(){
   Serial.print(F("Sending... "));
+  //float data = 32.5;
+  char hello[] = "A1";
+  RF24NetworkHeader header(other_node);
+  bool ok = network.write(header, &hello,strlen(hello));
+  Serial.println(ok ? F("ok.") : F("failed."));  
+
+  
+}
+
+
+void sendData2(){
+  Serial.print(F("Sending.2.. "));
   float data = 32.5;
   RF24NetworkHeader header(other_node);
   bool ok = network.write(header, &data, sizeof(data));
   Serial.println(ok ? F("ok.") : F("failed."));  
+  
 }
