@@ -45,24 +45,17 @@ void setup() {
 void loop() {
   network.update();  // Check the network regularly
   while (network.available()) {  // Is there anything ready for us?
-    RF24NetworkHeader header;  // If so, grab it and print it out
+    RF24NetworkHeader header;
     
     int len = 0;  
     len = radio.getDynamicPayloadSize();
-    //Serial.println("len:" + String(len)); 
-    char buf[len] = "";
-    //radio.read(&gotmsg, len);
-    network.read(header, &buf, len); //sizeof(data));
+     char buf[64] = "";
+    network.read(header, &buf, 64);
     
     //char myChar = 'char';
     String data = String(buf); 
-    data.trim();                        // remove any \r \n whitespace at the end of the String
-    
-    //Serial.println("node: " + String(header.from_node));
-    //Serial.println("data: " + String(data)); 
-    String response = "{\"type\":\"response\"";
-    response += ", \"response\":\"" + data + "\"";
-    response += "}";
+    data.trim();   
+    String response = data;
     
     Serial.println(response); 
   }
@@ -141,28 +134,16 @@ String getValue(String input, String key){
 
 
 void sendData(String node, String request){
-
-  String hexa = "0x" + node;
-  // we use .c_str() to access the underlying C string
-  int16_t output_node = strtol(hexa.c_str(), NULL, 0);
-  //Serial.println(output_node);
   
-  RF24NetworkHeader header(output_node);
-  //bool ok = network.write(header, &command, sizeof(command));
-   
-  //char hello[] = input;
-  //https://forum.arduino.cc/t/nrf24l01-how-to-send-a-string-with-rf24-library/329672/4
-  char message[sizeof(request)];
-  request.toCharArray(message, strlen(message));
-  
-  bool ok = radio.write(&message,strlen(message));
-  //bool ok = network.write(header, &message, sizeof(message));
-
-  String response = "{\"type\":\"status\"";
-  response += ", \"request\":\"" + request + "\"";
-  response += ", \"status\":" + String(ok ? F("ok.") : F("failed."));
-  response += "}"; 
-  
-  Serial.println(response); 
+    Serial.println(request);
+    Serial.println(node);
+    Serial.println(F("Sending... "));
+    RF24NetworkHeader header( node01);
+    int str_len = request.length() + 1;
+    char message[str_len];
+    request.toCharArray(message, str_len);
+    bool ok = network.write(header, &message,strlen(message));
+    Serial.println(message);
+    Serial.println(ok ? F("ok.") : F("failed."));
     
 }
