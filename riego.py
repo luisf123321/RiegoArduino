@@ -56,24 +56,6 @@ def regar():
         # x.join()
         print("Main    : all done")
     
-    
-
-# for i in range(5):
-#     ser.write(b'B')     # write a string  
-#     ser.write(b'D')     # write a string  
-#     ser.write(b'F')     # write a string  
-#     time.sleep(2)
-    
-#     ser.write(b'A')     # write a string
-#     ser.write(b'C')     # write a string
-#     ser.write(b'E')     # write a string
-#     time.sleep(2)
-    
-#     s = ser.read(10)
-#     print("read:", s)
-    
-# print("--- end ---")
-
 regar()
 
 ser.close()
