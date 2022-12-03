@@ -14,7 +14,7 @@ RF24 radio(CE_PIN, CSN_PIN);   // nRF24L01 (CE,CSN)rd
 
 RF24Network network(radio);  // Network uses that radio
 
-const uint16_t this_node = 02;   // Address of our node in Octal format
+const uint16_t this_node = 03;   // Address of our node in Octal format
 const uint16_t base_node = 00;  // Address of the other node in Octal format
 
 void setup() {
