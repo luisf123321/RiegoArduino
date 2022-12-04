@@ -26,21 +26,17 @@ class AdminRiegoDao:
             return adminRiegos
     
     @classmethod
-    def buscarSector(cls,adminRiego):
+    def buscarSector(cls,sector):
         with CursorPool() as cursor:
-            valores = (adminRiego.sector,)
+            valores = (sector,)
             cursor.execute(cls._SELELCT_BY_SECTOR,valores)
-            registros = cursor.fetchall()
-            if registros is None or registros == []:
+            registro = cursor.fetchone()
+            if registro is None or registro == []:
                 return None
             else:
-                adminRiegos = []
-                for registro in registros:
-                    adminRiego = AdminRiego(registro[0], registro[1], registro[2], registro[3], registro[4], registro[5], registro[6], registro[7])
-                    adminRiego = json.dumps(adminRiego.__dict__)
-                    adminRiegos.append(adminRiego)
-                    print(adminRiego)
-                return adminRiegos
+                adminRiego = AdminRiego(registro[0], registro[1], registro[2], registro[3], registro[4], registro[5], registro[6], registro[7])
+                print(adminRiego)
+                return adminRiego
     
     @classmethod
     def eliminar(cls, adminRiego):

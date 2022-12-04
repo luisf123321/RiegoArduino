@@ -4,6 +4,7 @@ from src.models.cultivo import Cultivo
 from src.models.sectores import Sector
 from src.models.tipo_suelo import TipoSuelo
 from src.dao.tipo_suelo_dao import TipoSueloDao
+from src.dao.tipo_cultivo_dao import TipoCultivoDao
 
 class logica:
     @classmethod
@@ -19,12 +20,18 @@ class logica:
 
         tiposuelo= TipoSueloDao.seleccionarTipoSuelo(1)
         print(tiposuelo.nombre, tiposuelo.cp)
-        """pmp = TipoSuelo.pmp
-        cp = TipoSuelo.cp
-        ihd = pmp - cp
+        cp = tiposuelo.cp
+        pmp = tiposuelo.pmp
+        ihd = cp-pmp
+        print("indice de humedad disponible", ihd)
+
+        adminRiego = AdminRiegoDao.buscarSector(1)
+        nap = adminRiego.nad
+        print(adminRiego.sector,adminRiego.nad)
         
-        nap = AdminRiego.nad
-        lrn = ihd * nap """
+        lrn = ihd * nap 
+        print("lamina de riego neta: ", lrn)
+
 
 
         
