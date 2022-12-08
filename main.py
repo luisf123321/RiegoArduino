@@ -1,8 +1,10 @@
 #import serial
 #import time
-from src.logica.logica1 import logica
+#from logica.logica_calculo_riego import logica
+from src.logica.logica_lecturas_riego import LogicaLecturasRiego
 
-logica.calcular_lrn()
+#logica.calcular_lrn()
+LogicaLecturasRiego.lecturaHumedad()
 """
 arduino = serial.Serial(port = "COM7", baudrate=115200 , timeout=.1)
 def read(x):
