@@ -11,6 +11,7 @@ from src.dao.dispositivo_medida import DispositivoMedidaDao
 import json
 from datetime import date
 from src.logica.arduino_base import ArduinoBase
+from src.logica.logica_riego import LogicaRiego
 
 class LogicaLecturasRiego:
     @classmethod
@@ -31,8 +32,8 @@ class LogicaLecturasRiego:
         adminRiego = AdminRiegoDao.buscarSector(sector)
         nap = adminRiego.nad
         if nap >= lectura["value"]:
-            activar = dict({"nodo":nodo , "pin":"D8" , "command":"ON"})
-            response = ArduinoBase.activarValvula(activar)
+            tiempo = LogicaRiego.logicaRiego(sector)
+            LogicaRiego.activacionRiego(nodo, tiempo)
 
     @classmethod
     def guardarLecturaHumedad(cls, lectura, sector): 
@@ -40,6 +41,8 @@ class LogicaLecturasRiego:
         lectura = json.loads(lectura)
         dispositivo_medida = DispositivoMedida(medida = lectura["value"],fecha = date , dispositivo=dispositivo.id)
         DispositivoMedidaDao.insertar(dispositivo_medida)
+
+    
 
 
 
