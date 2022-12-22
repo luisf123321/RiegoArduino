@@ -1,7 +1,7 @@
 
 
 class Sector:
-    def __init__(self, id, nombre, area, lote, latitud, longitud, altitud,  suelo,cultivo) -> None:
+    def __init__(self, id, nombre, area, lote, latitud, longitud, altitud,  suelo,cultivo, nodo) -> None:
         self._id = id
         self._nombre = nombre
         self._area = area
@@ -11,6 +11,7 @@ class Sector:
         self._lote = lote
         self._suelo = suelo
         self._cultivo = cultivo
+        self._nodo = nodo
     
     @property
     def id(self):
@@ -83,6 +84,13 @@ class Sector:
     @cultivo.setter
     def cultivo(self,cultivo):
         self._cultivo = cultivo
+
+    @property
+    def nodo(self):
+        return self._nodo
+    @nodo.setter
+    def nodo(self, nodo):
+        self._nodo = nodo
     
     def __str__(self) -> str:
         return f'''
